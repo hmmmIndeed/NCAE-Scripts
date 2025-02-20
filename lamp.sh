@@ -1,19 +1,28 @@
 #!/bin/bash
 
 # installing apache
+echo "sudo apt update"
 sudo apt update
+echo "sudo apt install apache2 php libapache2-mod-php php-mysql -y"
 sudo apt install apache2 php libapache2-mod-php php-mysql -y 
+echo "sudo systemctl start apache2"
 sudo systemctl start apache2  
+echo "sudo systemctl enable apache2"
 sudo systemctl enable apache2
 
-echo "DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm" > /etc/apache2/mods-enabled/dir.conf
+echo "made index.php the first option in /etc/apache2/mods-enabled/dir.conf"
+echo "DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm" > /etc/apache2/mods-enabled/dir.conf
+echo "sudo systemctl restart apache2"
 sudo systemctl restart apache2
 
 echo "domain name:"
 read domain
+echo "sudo mkdir /var/www/$domain"
 sudo mkdir /var/www/$domain
+echo "sudo chown -R $USER:$USER /var/www/$domain"
 sudo chown -R $USER:$USER /var/www/$domain
 
+echo "added the domain to /etc/apache2/sites-available/$domain.conf"
 cat > /etc/apache2/sites-available/$domain.conf <<- EOM
 <VirtualHost *:80>
   ServerName $domain
@@ -25,9 +34,13 @@ cat > /etc/apache2/sites-available/$domain.conf <<- EOM
 </VirtualHost>
 EOM
 
+echo "sudo a2ensite $domain"
 sudo a2ensite $domain
+echo "sudo a2dissite 000-default"
 sudo a2dissite 000-default
+echo "sudo apache2ctl configtest"
 sudo apache2ctl configtest
+echo "sudo systemctl reload apache2"
 sudo systemctl reload apache2
 
 echo "mySQL username:"
@@ -39,6 +52,7 @@ read database_name
 echo "table name:"
 read table_name
 
+echo "index.php now reads from the database, file: /var/www/$domain/index.php"
 cat > /var/www/$domain/index.php <<- EOM
 <?php
 \$user = $username;
