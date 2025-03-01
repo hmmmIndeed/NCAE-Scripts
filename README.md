@@ -2,10 +2,10 @@
 
 ## Installing PostgreSQL
 
-1. Upgrade packages and install PostgreSQL package and pip
+1. Upgrade packages and install PostgreSQL package
 
 ```
-sudo apt upgrade && sudo apt install postgresql python3-pip -y
+sudo apt upgrade && sudo apt install postgresql -y
 ```
 
 2. Start/enable PostgreSQL and login as the newly made postgres (`-i` is the same as `--login` and `-u user` specifies the user). Then, start the PostgreSQL command prompt.
@@ -32,5 +32,39 @@ GRANT ALL PRIVILEGES ON DATABASE flask_db TO asulk;
 
 5. Ensure the database was created with `\l` and quit psql with `\q`. Also, use `exit` to return back to the previous user.
 
-## Installing Flask and psycopg2
+## Installing Flask
 
+1. Upgrade packages and install anything related to python that's needed to setup Flask
+
+```
+sudo apt update && sudo apt install python3-pip python3-dev build-essential libssl-dev libffi-dev python3-setuptools python3-venv -y
+```
+
+2. Create and move to a new directory for the python project
+
+```
+mkdir ~/myproject
+cd ~/myproject
+```
+
+3. Create a virtual environment named `website` (or whatever name) to store the Flask project’s Python requirements and then activate it
+
+```
+python3 -m venv website
+source website/bin/activate
+```
+
+## Setting up Flask
+
+
+## Sources
+
+# PostgreSQL installation and setup
+
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-22-04 (just Step 1 but don't install postgresql-contrib)
+
+https://www.digitalocean.com/community/tutorials/how-to-use-a-postgresql-database-in-a-flask-application (just Step 1)
+
+# Flask installation and setup
+
+https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-22-04 
