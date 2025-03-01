@@ -32,7 +32,7 @@ GRANT ALL PRIVILEGES ON DATABASE flask_db TO asulk;
 
 5. Ensure the database was created with `\l` and quit psql with `\q`. Also, use `exit` to return back to the previous user.
 
-## Installing Flask
+## Installing Flask (and psycopg2)
 
 1. Upgrade packages and install anything related to python that's needed to setup Flask
 
@@ -54,7 +54,71 @@ python3 -m venv website
 source website/bin/activate
 ```
 
+4. Use pip to install flask and psycopg2-binary
+
+```
+pip install flask psycopg2-binary
+```
+
 ## Setting up Flask
+
+1. Create a file to initialize the database
+
+```
+nano ~/myproject/init_db.py
+```
+
+Add this example to `init_db.py`
+
+```py
+import os
+import psycopg2
+
+conn = psycopg2.connect(
+        host="localhost",
+        database="flask_db",
+        user=os.environ['DB_USERNAME'],
+        password=os.environ['DB_PASSWORD'])
+
+# Open a cursor to perform database operations
+cur = conn.cursor()
+
+# Execute a command: this creates a new table
+cur.execute('DROP TABLE IF EXISTS books;')
+cur.execute('CREATE TABLE books (id serial PRIMARY KEY,'
+                                 'title varchar (150) NOT NULL,'
+                                 'author varchar (50) NOT NULL,'
+                                 'pages_num integer NOT NULL,'
+                                 'review text,'
+                                 'date_added date DEFAULT CURRENT_TIMESTAMP);'
+                                 )
+
+# Insert data into the table
+
+cur.execute('INSERT INTO books (title, author, pages_num, review)'
+            'VALUES (%s, %s, %s, %s)',
+            ('A Tale of Two Cities',
+             'Charles Dickens',
+             489,
+             'A great classic!')
+            )
+
+
+cur.execute('INSERT INTO books (title, author, pages_num, review)'
+            'VALUES (%s, %s, %s, %s)',
+            ('Anna Karenina',
+             'Leo Tolstoy',
+             864,
+             'Another great classic!')
+            )
+
+conn.commit()
+
+cur.close()
+conn.close()
+```
+
+
 
 
 ## Sources
@@ -67,4 +131,8 @@ https://www.digitalocean.com/community/tutorials/how-to-use-a-postgresql-databas
 
 # Flask installation and setup
 
-https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-22-04 
+https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-22-04 (just Steps 1 & 2)
+
+https://www.digitalocean.com/community/tutorials/how-to-use-a-postgresql-database-in-a-flask-application (now Step 2)
+
+
